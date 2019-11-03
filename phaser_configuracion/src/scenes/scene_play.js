@@ -7,6 +7,7 @@ class Scene_play extends Phaser.Scene {
     let center_width = this.sys.game.config.width / 2;
     let center_height = this.sys.game.config.height / 2;
     let screen = this.sys.game.config.width;
+
     //Separador
     this.add.image(center_width, center_height, "separador");
     //Palas
@@ -14,11 +15,11 @@ class Scene_play extends Phaser.Scene {
     this.derecha = new Palas(this, screen - 30, center_height, "derecha");
 
     //Bola
-    this.physics.world.setBoundsCollision(true, true, true, true);
+    this.physics.world.setBoundsCollision(false, false, true, true);
     this.ball = this.physics.add.image(center_width, center_height, "ball");
     this.ball.setCollideWorldBounds(true);
     this.ball.setBounce(1);
-    this.ball.setVelocityX(-180);
+    this.ball.setVelocityX(-300);
 
     //Fisicas
     this.physics.add.collider(
@@ -47,36 +48,46 @@ class Scene_play extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.S
     );
   }
+
   update() {
     //Control de las palas
     //Pala derecha
     if (this.cursor.down.isDown) {
-      this.derecha.body.setVelocityY(160);
+      this.derecha.body.setVelocityY(280);
     } else if (this.cursor.up.isDown) {
-      this.derecha.body.setVelocityY(-160);
+      this.derecha.body.setVelocityY(-280);
     } else {
       this.derecha.body.setVelocityY(0);
     }
     //Pala izquierda
     if (this.cursor_S.isDown) {
-      this.izquierda.body.setVelocityY(160);
+      this.izquierda.body.setVelocityY(280);
     } else if (this.cursor_W.isDown) {
-      this.izquierda.body.setVelocityY(-160);
+      this.izquierda.body.setVelocityY(-280);
     } else {
       this.izquierda.body.setVelocity(0);
     }
+    if (this.ball.x < 0) {
+      console.log("Player 2 Score");
+      this.ball.setPosition(
+        this.sys.game.config.width / 2,
+        this.sys.game.config.height / 2
+      );
+    } else if (this.ball.x > this.sys.game.config.width) {
+      console.log("Player 1 Score");
+      this.ball.setPosition(
+        this.sys.game.config.width / 2,
+        this.sys.game.config.height / 2
+      );
+    }
   }
-
-  // Esto en el ejemplo planteado, es para cuando la bola salga del container
-  // se vuelva a poner en el centro, es bueno tenerla de referencia pero no necesario
-  // en nuestro caso.
-  // update() {
-  //   if (this.ball.x < 0 || this.ball.x > this.sys.game.config.width) {
-  //     this.ball.setPosition(this.sys.game.config.width/2,this.sys.game.config.width/2);
-  //   }
-  // }
   chocaPala() {
-    this.ball.setVelocityY(Phaser.Math.Between(-120, 120));
+    this.ball.setVelocityY(Phaser.Math.Between(-150, 150));
   }
 }
+
+// Esto en el ejemplo planteado, es para cuando la bola salga del container
+// se vuelva a poner en el centro, es bueno tenerla de referencia pero no necesario
+// en nuestro caso.
+
 export default Scene_play;
