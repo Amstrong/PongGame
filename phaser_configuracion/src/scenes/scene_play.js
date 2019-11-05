@@ -3,7 +3,18 @@ class Scene_play extends Phaser.Scene {
   constructor() {
     super({ key: "Scene_play" });
   }
+
   create() {
+    var ScoreLeft = this.add.text(100, 6, 0, {
+      color: "#ffffff",
+      fontSize: 40
+    });
+    var ScoreRight = this.add.text(this.sys.game.config.width - 100, 6, 0, {
+      color: "#ffffff",
+      fontSize: 40
+    });
+    var counterLeft = 0;
+    var counterRight = 0;
     let center_width = this.sys.game.config.width / 2;
     let center_height = this.sys.game.config.height / 2;
     let screen = this.sys.game.config.width;
@@ -47,8 +58,9 @@ class Scene_play extends Phaser.Scene {
     this.cursor_S = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.S
     );
+    ScoreLeft.text = counterLeft;
+    ScoreRight.text = counterRight;
   }
-
   update() {
     //Control de las palas
     //Pala derecha
@@ -68,13 +80,13 @@ class Scene_play extends Phaser.Scene {
       this.izquierda.body.setVelocity(0);
     }
     if (this.ball.x < 0) {
-      console.log("Player 2 Score");
+      counterLeft += 1;
       this.ball.setPosition(
         this.sys.game.config.width / 2,
         this.sys.game.config.height / 2
       );
     } else if (this.ball.x > this.sys.game.config.width) {
-      console.log("Player 1 Score");
+      counterRight += 1;
       this.ball.setPosition(
         this.sys.game.config.width / 2,
         this.sys.game.config.height / 2

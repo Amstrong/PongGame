@@ -9,4 +9,4 @@ const config = {
   },
   scene: [Bootloader, Scene_play]
 };
-new Phaser.Game(config);
+var game = new Phaser.Game(config);
