@@ -4,7 +4,12 @@ class Scene_play extends Phaser.Scene {
     super({ key: "Scene_play" });
   }
 
+  preload() {
+    this.load.audio("prueba", "./assets/Pop.mp3");
+  }
+
   create() {
+    this.audio = this.sound.add("prueba", { loop: false });
     this.ScoreLeft = this.add.text(100, 6, 0, {
       color: "#ffffff",
       fontSize: 40
@@ -54,9 +59,27 @@ class Scene_play extends Phaser.Scene {
     this.cursor_W = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.W
     );
+    this.audio.play();
+    this.cursor_W = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.W
+    );
+    this.audio.play();
     this.cursor_S = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.S
     );
+    this.audio.play();
+
+    //controles musica
+    this.input.keyboard.on("keydown_UP", () => {
+      this.audio.play();
+    });
+    this.input.keyboard.on(this.cursor_W, () => {
+      this.audio.play();
+    });
+
+    this.input.keyboard.on("keydown_DOWN", () => {
+      this.audio.play();
+    });
     this.valor1 = 0;
     this.valor2 = 0;
   }
@@ -98,6 +121,7 @@ class Scene_play extends Phaser.Scene {
       );
     }
   }
+
   chocaPala() {
     this.ball.setVelocityY(Phaser.Math.Between(-150, 150));
   }

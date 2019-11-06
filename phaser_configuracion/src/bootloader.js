@@ -12,4 +12,5 @@ class Bootloader extends Phaser.Scene {
     this.load.image("separador", "./assets/separator.png");
   }
 }
+
 export default Bootloader;
