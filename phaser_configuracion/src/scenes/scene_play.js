@@ -73,19 +73,6 @@ class Scene_play extends Phaser.Scene {
     this.cursor_S = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.S
     );
-    //Controles musica
-    this.input.keyboard.on("keydown-W", () => {
-      this.upAndDown.play();
-    });
-    this.input.keyboard.on("keydown-S", () => {
-      this.upAndDown.play();
-    });
-    this.input.keyboard.on("keydown-UP", () => {
-      this.upAndDown.play();
-    });
-    this.input.keyboard.on("keydown-DOWN", () => {
-      this.upAndDown.play();
-    });
   }
   MarcadorIzquierda() {
     this.ScoreLeft.text = this.valor1 += 1;
@@ -130,6 +117,7 @@ class Scene_play extends Phaser.Scene {
 
   chocaPala() {
     this.ball.setVelocityY(Phaser.Math.Between(-150, 150));
+    this.upAndDown.play();
   }
 
   //Metodo activo
