@@ -60,25 +60,39 @@ class Scene_play extends Phaser.Scene {
     );
 
     //CONTROLES
-
-    //Pala derecha
     this.cursor = this.input.keyboard.createCursorKeys();
-    //Pala izquierda
-    this.cursor_W = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.W
-    );
     this.cursor_W = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.W
     );
     this.cursor_S = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.S
     );
+    this.input.keyboard.on("keydown-TWO", () => {
+      this.scene.pause("Scene_play");
+    });
+    this.input.keyboard.on("keydown-THREE", () => {
+      this.scene.run("Scene_play");
+    });
   }
   MarcadorIzquierda() {
     this.ScoreLeft.text = this.valor1 += 1;
+    this.finishGame();
   }
   MarcadorDerecha() {
     this.ScoreRight.text = this.valor2 += 1;
+    this.finishGame();
+  }
+  finishGame() {
+    if (this.ScoreLeft.text == 7) {
+      this.ScoreLeft.text = 0;
+      this.valor1 = 0;
+      alert("Jugador 1 ha ganado.");
+    } else if (this.ScoreRight.text == 7) {
+      this.ScoreRight.text = 0;
+      this.valor2 = 0;
+      alert("Jugador 2 ha ganado.");
+      console.log(this.valor2);
+    }
   }
 
   update() {
