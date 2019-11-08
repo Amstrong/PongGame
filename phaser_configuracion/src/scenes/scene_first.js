@@ -3,17 +3,15 @@ class scene_first extends Phaser.Scene {
     super({ key: "Scene_first" });
   }
   preload() {
-    // this.load.audio("homeSound", "./assets/3DPinball.mp3");
+    this.add.image(530, 220, "linea1");
     this.ScoreRight = this.add.text(290, 170, "Esperando conexión...", {
       color: "#ffffff",
       fontSize: 40
     });
-    this.add.image(530, 220, "linea1");
 
     //Dimensiones de pantalla
     let center_width = this.sys.game.config.width / 2;
     let center_height = this.sys.game.config.height / 2;
-    //let screen = this.sys.game.config.width;
 
     //Especificaciones de la Bola
     this.physics.world.setBoundsCollision(true, true, true, true);

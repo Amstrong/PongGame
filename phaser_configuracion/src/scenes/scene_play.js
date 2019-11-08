@@ -1,4 +1,5 @@
 import Palas from "../gameObjects/palas.js";
+import Scene_win from "./scene_win.js";
 class Scene_play extends Phaser.Scene {
   constructor() {
     super({ key: "Scene_play" });
@@ -14,11 +15,11 @@ class Scene_play extends Phaser.Scene {
     this.ballOut = this.sound.add("ballOut", { loop: false });
     this.upAndDown = this.sound.add("upAndDown", { loop: false });
     //Declaración de Textos en el Frame
-    this.ScoreLeft = this.add.text(100, 6, 0, {
+    this.ScoreLeft = this.add.text(400, 6, 0, {
       color: "#ffffff",
       fontSize: 40
     });
-    this.ScoreRight = this.add.text(this.sys.game.config.width - 100, 6, 0, {
+    this.ScoreRight = this.add.text(this.sys.game.config.width - 428, 6, 0, {
       color: "#ffffff",
       fontSize: 40
     });
@@ -67,34 +68,13 @@ class Scene_play extends Phaser.Scene {
     this.cursor_S = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.S
     );
-    this.input.keyboard.on("keydown-TWO", () => {
-      this.scene.pause("Scene_play");
-    });
-    this.input.keyboard.on("keydown-THREE", () => {
-      this.scene.run("Scene_play");
-    });
+    // this.input.keyboard.on("keydown-TWO", () => {
+    //   this.scene.pause("Scene_play");
+    // });
+    // this.input.keyboard.on("keydown-THREE", () => {
+    //   this.scene.launch("Scene_play");
+    // });
   }
-  MarcadorIzquierda() {
-    this.ScoreLeft.text = this.valor1 += 1;
-    this.finishGame();
-  }
-  MarcadorDerecha() {
-    this.ScoreRight.text = this.valor2 += 1;
-    this.finishGame();
-  }
-  finishGame() {
-    if (this.ScoreLeft.text == 7) {
-      this.ScoreLeft.text = 0;
-      this.valor1 = 0;
-      alert("Jugador 1 ha ganado.");
-    } else if (this.ScoreRight.text == 7) {
-      this.ScoreRight.text = 0;
-      this.valor2 = 0;
-      alert("Jugador 2 ha ganado.");
-      console.log(this.valor2);
-    }
-  }
-
   update() {
     //Pala derecha
     if (this.cursor.down.isDown) {
@@ -129,12 +109,38 @@ class Scene_play extends Phaser.Scene {
     }
   }
 
+  //METODOS
   chocaPala() {
     this.ball.setVelocityY(Phaser.Math.Between(-150, 150));
     this.upAndDown.play();
   }
-
-  //Metodo activo
+  MarcadorIzquierda() {
+    this.ScoreLeft.text = this.valor1 += 1;
+    this.finishGame();
+  }
+  MarcadorDerecha() {
+    this.ScoreRight.text = this.valor2 += 1;
+    this.finishGame();
+  }
+  finishGame() {
+    var ganador;
+    if (this.ScoreLeft.text == 7) {
+      this.ScoreLeft.text = 0;
+      this.valor1 = 0;
+      this.scene.start("Scene_win");
+      this.ganador = "Jugador 1";
+      var prueba = this.add.image(250, 280, "boton").setInteractive();
+      prueba.on("pointerdown", function(pointer) {
+        this.scene.restart("Scene_play");
+      });
+    } else if (this.ScoreRight.text == 7) {
+      this.ScoreRight.text = 0;
+      this.valor2 = 0;
+      this.ganador = "jugador 2";
+      //alert("Jugador 2 ha ganado.");
+      this.scene.start("Scene_win");
+    }
+  }
 }
 
 export default Scene_play;
