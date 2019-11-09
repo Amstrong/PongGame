@@ -19,6 +19,11 @@ var io = socket(server);
 io.sockets.on("connection", function(socket) {
   connections.push(socket);
   socket.on("start", function(data) {
-    console.log("Un usuario se ha conectado:" + connections.length);
+    console.log(
+      "Un usuario se ha conectado: " +
+        data.id +
+        " numero de conexiones " +
+        connections.length
+    );
   });
 });
