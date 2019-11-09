@@ -87,12 +87,6 @@ class scene_first extends Phaser.Scene {
   }
 
   create() {
-    var socket = io.connect("//localhost:8081/");
-    var data = {
-      id: socket.id
-    };
-    socket.emit("start", data);
-
     this.Score = this.add.bitmapText(
       240,
       170,
