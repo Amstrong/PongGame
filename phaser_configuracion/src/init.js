@@ -7,7 +7,10 @@ const config = {
   height: 400,
   parent: "container",
   physics: {
-    default: "arcade"
+    default: "arcade",
+    arcade: {
+      debug: true
+    }
   },
   scene: [Bootloader, Scene_play, scene_first, scene_win]
 };

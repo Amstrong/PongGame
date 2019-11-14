@@ -4,7 +4,7 @@ class Scene_play extends Phaser.Scene {
   constructor() {
     super({ key: "Scene_play" });
 
-    console.log(this.socket);
+    //console.log(this.socket);
   }
 
   preload() {
@@ -81,15 +81,46 @@ class Scene_play extends Phaser.Scene {
     //CONTROLES
     this.cursor = this.input.keyboard.createCursorKeys();
 
+    this.puedeChocar = true;
     // this.input.keyboard.on("keydown-TWO", () => {
     //   this.scene.pause("Scene_play");
     // });
     // this.input.keyboard.on("keydown-THREE", () => {
     //   this.scene.launch("Scene_play");
     // });
+
+    this.socket.on(
+      "emitirPosicion",
+      pos => {
+        if (this.otroJugador) {
+          this.otroJugador.x = pos[0].x;
+          this.otroJugador.y = pos[0].y;
+        }
+      },
+      this
+    );
   }
   update() {
     if (this.player) this.player.update();
+    if (this.ball) {
+      let yMax = this.ball.getBounds().top;
+      let yMin = this.ball.getBounds().bottom;
+      let xMin = this.ball.getBounds().left;
+      let xMax = this.ball.getBounds().right;
+      if ((yMax <= 0 || yMin >= 400) && this.puedeChocar) {
+        this.socket.emit("bolaMundo", this.ball.body.velocity.y);
+        this.puedeChocar = false;
+        setTimeout(() => {
+          this.puedeChocar = true;
+        }, 500);
+      }
+      if (xMin <= -10 || xMax >= 1034) {
+        if (this.ball) {
+          this.ball.destroy();
+          this.socket.emit("reiniciarBola");
+        }
+      }
+    }
     // if (this.ball.x < 0) {
     //   this.MarcadorDerecha();
     //   this.ballOut.play();
@@ -109,7 +140,7 @@ class Scene_play extends Phaser.Scene {
 
   //METODOS
   chocaPala() {
-    this.ball.setVelocityY(Phaser.Math.Between(-150, 150));
+    this.socket.emit("bolaChoco");
     this.upAndDown.play();
   }
   MarcadorIzquierda() {
@@ -144,14 +175,86 @@ class Scene_play extends Phaser.Scene {
       },
       this
     );
+
+    this.socket.on(
+      "rebotaF",
+      y => {
+        if (this.ball) {
+          console.log(y);
+          this.ball.setVelocityY(y);
+        }
+      },
+      this
+    );
+
+    this.socket.on(
+      "ponerBola",
+      info => {
+        this.ball = this.physics.add
+          .image(info.x, info.y, "ball")
+          .setOrigin(0.5, 0.5);
+        //this.ball.setCollideWorldBounds(true);
+        this.ball.setVelocityX(info.velx);
+        this.bolaCollision = this.physics.add.collider(
+          this.player,
+          this.ball,
+          this.chocaPala,
+          null,
+          this
+        );
+        this.ballWorldCollision = this.physics.add.collider(
+          this.ball,
+          this.physics.world.bounds,
+          this.chocaPala,
+          null,
+          this
+        );
+      },
+      this
+    );
+
+    this.socket.on(
+      "reboteBola",
+      info => {
+        if (this.ball) {
+          this.ball.setVelocityY(info.y);
+          this.ball.setVelocityX(info.x);
+        }
+      },
+      this
+    );
+
+    this.socket.on(
+      "jugadorFuera",
+      () => {
+        if (this.otroJugador) this.otroJugador.destroy();
+      },
+      this
+    );
   }
 
   addJugador(player) {
-    this.player = new Palas(this, player.x, player.y, "derecha", true);
+    this.player = new Palas(
+      this,
+      player.x,
+      player.y,
+      "derecha",
+      true,
+      this.socket
+    );
+
+    // this.player.setBoundsCollision(false, false, true, true);
   }
 
   addOtroJugador(player) {
-    this.otroJugador = new Palas(this, player.x, player.y, "izquierda", false);
+    this.otroJugador = new Palas(
+      this,
+      player.x,
+      player.y,
+      "izquierda",
+      false,
+      this.socket
+    );
   }
 
   finishGame() {
